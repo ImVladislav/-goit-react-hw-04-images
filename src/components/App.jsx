@@ -10,6 +10,7 @@ import { getImages } from './Pixabay/pixabay_api';
 import { LoadMoreBtn } from './Button&IconBtn/Button';
 import { Box } from './Box';
 
+
 export class App extends Component {
   state = {
     searchQuerry: null,
