@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
 import { RotatingLines } from 'react-loader-spinner';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -57,48 +57,49 @@ export const App = () => {
     setPage(page => page + 1);
     setIsLoading(true);
   };
-    return (
-      <>
-        <SearchBar>
-          <SearchForm
-            onSubmit={this.handleSubmit}
-            isLoading={isLoading}
-            searchQuerry={searchQuerry}
-          />
-        </SearchBar>
-        {images.length > 0 && (
-          <ImageGallery>
-            {images.map(image => (
-              <ImageGalleryItem key={image.id} image={image} />
-            ))}
-          </ImageGallery>
-        )}
-        {isLoading && (
-          <Box display="flex" mt="20px" justifyContent="center">
-            <RotatingLines
-              strokeColor="#303f9f"
-              strokeWidth="5"
-              animationDuration="0.75"
-              width="96"
-              visible={true}
-            />
-          </Box>
-        )}
-        {images.length > 0 && !isLoading && !isMoreBtnHide && (
-          <LoadMoreBtn text="Load More" onClick={this.handleMoreSearch} />
-        )}
-        <ToastContainer
-          position="top-right"
-          autoClose={3000}
-          hideProgressBar
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
+
+  return (
+    <>
+      <SearchBar>
+        <SearchForm
+          onSubmit={handleSubmit}
+          isLoading={isLoading}
+          searchQuerry={searchQuerry}
         />
-      </>
-    );
-  }
-}
+      </SearchBar>
+      {error && <p>Ups! Something went wrong!</p>}
+      {images.length > 0 && (
+        <ImageGallery>
+          {images.map(image => (
+            <ImageGalleryItem key={image.id} image={image} />
+          ))}
+        </ImageGallery>
+      )}
+      {isLoading && (
+        <Box display="flex" mt="20px" justifyContent="center">
+          <RotatingLines
+            strokeColor="#303f9f"
+            strokeWidth="5"
+            animationDuration="0.75"
+            width="96"
+            visible={true}
+          />
+        </Box>
+      )}
+      {images.length > 0 && !isLoading && !isMoreBtnHide && (
+        <LoadMoreBtn text="Load More" onClick={handleMoreSearch} />
+      )}
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+    </>
+  );
+};
