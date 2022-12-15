@@ -11,62 +11,52 @@ import { LoadMoreBtn } from './Button&IconBtn/Button';
 import { Box } from './Box';
 
 
-export class App extends Component {
-  state = {
-    searchQuerry: null,
-    page: 1,
-    images: [],
-    isLoading: false,
-    error: null,
-    isMoreBtnHide: false,
-  };
+export const App = () => {
+  const [searchQuerry, setSearchQuerry] = useState('');
+  const [page, setPage] = useState(1);
+  const [images, setImages] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [isMoreBtnHide, setIsMoreBtnHide] = useState(false);
 
-  componentDidUpdate(_, prevState) {
-    const { searchQuerry, page } = this.state;
-
-    if (prevState.searchQuerry !== searchQuerry || prevState.page !== page) {
+  useEffect(() => {
+    if (!searchQuerry) {
+      return;
+    } else {
       getImages(searchQuerry, page)
         .then(data => {
           if (data.hits.length < 12) {
-            this.setState({ isMoreBtnHide: true });
+            setIsMoreBtnHide(true);
           }
+
           if (data.total === 0) {
-            this.setState({ isLoading: false });
+            setIsLoading(false);
             return toast.info('Sorry, nothing was found for your search');
           }
 
-          this.setState(prevState => ({
-            images: [...prevState.images, ...data.hits],
-            isLoading: false,
-          }));
+          setImages(images => [...images, ...data.hits]);
+
+          setIsLoading(false);
         })
         .catch(error => {
           console.log(error);
-          this.setState({ error });
+          setError(error);
         });
     }
-  }
+  }, [searchQuerry, page]);
 
-  handleSubmit = searchQuerry => {
-    this.setState({
-      searchQuerry,
-      page: 1,
-      images: [],
-      isLoading: true,
-      isMoreBtnHide: false,
-    });
+  const handleSubmit = searchQuerry => {
+    setSearchQuerry(searchQuerry);
+    setPage(1);
+    setImages([]);
+    setIsLoading(true);
+    setIsMoreBtnHide(false);
   };
 
-  handleMoreSearch = () => {
-    this.setState(prevState => ({
-      page: prevState.page + 1,
-      isLoading: true,
-    }));
+  const handleMoreSearch = () => {
+    setPage(page => page + 1);
+    setIsLoading(true);
   };
-
-  render() {
-    const { isLoading, images, isMoreBtnHide, searchQuerry } = this.state;
-
     return (
       <>
         <SearchBar>
